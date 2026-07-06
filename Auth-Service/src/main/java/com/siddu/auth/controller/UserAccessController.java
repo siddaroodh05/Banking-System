@@ -2,27 +2,38 @@ package com.siddu.auth.controller;
 
 import com.siddu.auth.dto.Requests.RoleAssignRequest;
 import com.siddu.auth.dto.Response.RolesResponse;
+import com.siddu.auth.dto.Response.UserStatusResponse;
+import com.siddu.auth.service.UserAccessManagementService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-@RestController("/admin")
+import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+
+@RestController
 public class UserAccessController {
+    private final UserAccessManagementService userAccessManagementService;
+    @Autowired
+    public UserAccessController(UserAccessManagementService userAccessManagementService) {
+        this.userAccessManagementService = userAccessManagementService;
+    }
 
-
-    GetMapping("/users")
-    public ResponseEntity<RolesResponse> getUsers() {
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @GetMapping("/admin/users")
+    public ResponseEntity<Page<UserStatusResponse>> getUsers(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "15") int size) {
+        return  ResponseEntity.ok(userAccessManagementService.getUsers(page,size));
 
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/users/roles")
-    public ResponseEntity<RolesResponse>  Assignroles(@RequestBody RoleAssignRequest){
-        return   ResponseEntity.ok().body(new RolesResponse());
+    @PostMapping("/admin/users/roles/assign")
+    public ResponseEntity<RolesResponse> assignRole(@RequestBody RoleAssignRequest roleAssignRequest) {
+        return ResponseEntity.ok(userAccessManagementService.assignRole(roleAssignRequest));
 
     }
+
+
+
+
 
 }

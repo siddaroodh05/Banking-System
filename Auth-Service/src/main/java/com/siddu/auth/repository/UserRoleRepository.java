@@ -11,6 +11,8 @@ import java.util.UUID;
 public interface UserRoleRepository extends JpaRepository<UserRoleEntity, UUID> {
     List<UserRoleEntity> findByUser(UserEntity user);
 
-    boolean existsByUser_IdAndRole_Id(UUID userId, UUID roleId);
+    List<UserRoleEntity> findByUser_IdIn(List<UUID> userIds);
+    boolean existsByUserIdAndRoleId(UUID userId, long roleId);
+
 
 }

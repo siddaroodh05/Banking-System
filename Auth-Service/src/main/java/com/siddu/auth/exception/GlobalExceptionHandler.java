@@ -15,13 +15,14 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ApierrorResponse> HandleEmailAlreadyExistsException(EmailAlreadyExistsException e){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApierrorResponse(
-        HttpStatus.CONFLICT.name(),e.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).
+                body(new ApierrorResponse(HttpStatus.CONFLICT.name(),e.getMessage()));
 
     }
     @ExceptionHandler(InvalidCreditionalException.class)
     public ResponseEntity<ApierrorResponse> HandleInvalidCreditionalException(InvalidCreditionalException e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApierrorResponse(HttpStatus.BAD_REQUEST.name(),e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).
+                body(new ApierrorResponse(HttpStatus.BAD_REQUEST.name(),e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -52,13 +53,22 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(InvalidUserStateException.class)
     public ResponseEntity<ApierrorResponse> handleInvalidUserStateException(InvalidUserStateException e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApierrorResponse(HttpStatus.BAD_REQUEST.name(),e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).
+                body(new ApierrorResponse(HttpStatus.BAD_REQUEST.name(),e.getMessage()));
     }
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ApierrorResponse> handleIllegalStateException(IllegalStateException e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApierrorResponse(HttpStatus.BAD_REQUEST.name(),e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).
+                body(new ApierrorResponse(HttpStatus.BAD_REQUEST.name(),e.getMessage()));
     }
+
+    @ExceptionHandler(ResourceExistException.class)
+    public ResponseEntity<ApierrorResponse> handleResourceExistException(ResourceExistException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).
+                body(new ApierrorResponse(HttpStatus.CONFLICT.name(),e.getMessage()));
+    }
+
 
 
 

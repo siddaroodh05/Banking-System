@@ -57,7 +57,7 @@ public class AuthService {
 
         user=userRepository.save(user);
 
-        RoleEntity role=roleRepository.findByName(RoleName.USER).orElseThrow(() -> new IllegalStateException("role user not found"));
+        RoleEntity role=roleRepository.findByName(RoleName.ADMIN).orElseThrow(() -> new IllegalStateException("role user not found"));
 
         UserRoleEntity userRole = UserRoleEntity.builder()
                 .user(user)
