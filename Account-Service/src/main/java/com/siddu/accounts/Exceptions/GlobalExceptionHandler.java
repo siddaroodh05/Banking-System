@@ -27,5 +27,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).
                 body(new ApiErrorResponse(HttpStatus.NOT_FOUND.name(),e.getMessage()));
     }
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleAccountNotFoundException(AccountNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).
+                body(new ApiErrorResponse(HttpStatus.NOT_FOUND.name(),e.getMessage()));
+    }
 
 }
