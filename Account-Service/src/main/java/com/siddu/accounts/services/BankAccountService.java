@@ -2,6 +2,7 @@ package com.siddu.accounts.services;
 
 import com.siddu.accounts.Dto.Requests.CheckBalanceRequest;
 import com.siddu.accounts.Dto.Requests.CreateBankAccountRequest;
+import com.siddu.accounts.Dto.Requests.VerifyAccountRequest;
 import com.siddu.accounts.Dto.Responses.*;
 import com.siddu.accounts.Entity.AccountProfileEntity;
 import com.siddu.accounts.Entity.AccountsEntity;
@@ -37,9 +38,6 @@ public class BankAccountService {
         this.accountProfileEntityRepository = accountProfileEntityRepository;
         this.branchEntityRepository = branchEntityRepository;
     }
-
-
-
 
 
     private AccountProfileEntity createProfile(CreateBankAccountRequest request, UUID userId) {
@@ -205,6 +203,32 @@ public class BankAccountService {
                         branch.getAddressLine(),branch.getCity(),branch.getPincode()
                 ));
     }
+    public VerifyAccountResponse verifyreciveraccount(VerifyAccountRequest request) {
+        System.out.println("Receiver Account: " + request.getAccountNumber());
+        AccountsEntity account=accountEntityRepository.findByAccountNumber(request.getAccountNumber())
+                .orElseThrow(()-> new ResourceNotFoundException("account not found."));
 
+        if(!account.getStatus().equals(AccountStatus.ACTIVE)){
+            throw new AccountInactiveException("account is not active");
+        }
+
+        return new VerifyAccountResponse(account.getAccountNumber(),account.getStatus());
+
+    }
+
+    public VerifyAccountResponse verifysenderaccount(VerifyAccountRequest request) {
+        AccountsEntity account=accountEntityRepository.findByAccountNumber(request.getAccountNumber())
+                .orElseThrow(
+                ()-> new ResourceNotFoundException("account not found."));
+        if(!account.getProfile().getUserId().equals(SecurityUtils.getCurrentUserId())) {
+            throw new AccessForbiddenException("You are not authorized to access this account");
+        }
+        if(!account.getStatus().equals(AccountStatus.ACTIVE)){
+            throw new AccountInactiveException("account is not active");
+        }
+        return new VerifyAccountResponse(
+                account.getAccountNumber(),
+                account.getStatus());
+    }
 
 }

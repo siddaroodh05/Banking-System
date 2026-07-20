@@ -10,7 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Arrays;
+import java.util.Objects;
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -39,8 +40,11 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        String errorMessage = Objects.requireNonNull(e.getBindingResult()
+                        .getFieldError())
+                .getDefaultMessage();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).
-                body(new ApiErrorResponse(HttpStatus.BAD_REQUEST.name(),e.getMessage()));
+                body(new ApiErrorResponse(HttpStatus.BAD_REQUEST.name(),errorMessage));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -62,6 +66,11 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest()
                 .body(new ApiErrorResponse(HttpStatus.BAD_REQUEST.name(), "Invalid request body"));
+    }
+    @ExceptionHandler(AccessForbiddenException.class)
+    public ResponseEntity<ApiErrorResponse> handleAccessForbiddenException(AccessForbiddenException e) {
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).
+                body(new ApiErrorResponse(HttpStatus.FORBIDDEN.name(),e.getMessage()));
     }
 
 

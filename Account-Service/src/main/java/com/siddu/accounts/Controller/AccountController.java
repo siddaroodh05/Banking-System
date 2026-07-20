@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.UUID;
 
 @RestController
@@ -44,13 +43,11 @@ public class AccountController {
 
 
     @GetMapping("/accounts/check-balance")
-    public ResponseEntity<CheckBalanceResponse> getAccountBalance(@RequestBody CheckBalanceRequest request)  {
+    public ResponseEntity<CheckBalanceResponse> getAccountBalance(@Valid @RequestBody CheckBalanceRequest request)  {
         return ResponseEntity.ok(bankAccountService.checkaccountbalance(request));
 
     }
 
-    @GetMapping("accounts/internals/branches")
-    public ResponseEntity<Page<BranchResponse>> getBranches(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "3") int size) {
-        return ResponseEntity.ok(bankAccountService.getBranches(page, size));
-    }
+
+
 }

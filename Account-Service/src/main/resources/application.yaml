@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: Account-Service
+  Jackson:
+    deserialization:
+        fail-on-unknown-properties: true
 
   datasource:
     url: jdbc:postgresql://localhost:5432/Account-Database
