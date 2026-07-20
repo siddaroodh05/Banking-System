@@ -53,6 +53,6 @@ public class CreateBankAccountRequest {
     @Pattern(regexp = "\\d{6}", message = "Pincode must contain exactly 6 digits")
     private String pincode;
 
-    @NotNull(message = "Please provide the branch id")
-    private UUID branchId;
+    @NotBlank(message = "Please provide the branch ifscCode")
+    private String IfscCode;
 }

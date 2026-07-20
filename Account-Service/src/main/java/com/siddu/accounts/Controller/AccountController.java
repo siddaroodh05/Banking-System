@@ -7,11 +7,9 @@ import com.siddu.accounts.Utils.SecurityUtils;
 import com.siddu.accounts.services.BankAccountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -49,7 +47,10 @@ public class AccountController {
     public ResponseEntity<CheckBalanceResponse> getAccountBalance(@RequestBody CheckBalanceRequest request)  {
         return ResponseEntity.ok(bankAccountService.checkaccountbalance(request));
 
+    }
 
-
+    @GetMapping("accounts/internals/branches")
+    public ResponseEntity<Page<BranchResponse>> getBranches(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "3") int size) {
+        return ResponseEntity.ok(bankAccountService.getBranches(page, size));
     }
 }

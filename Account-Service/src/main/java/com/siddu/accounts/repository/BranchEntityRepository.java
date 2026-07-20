@@ -7,5 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface BranchEntityRepository extends JpaRepository<BranchEntity, UUID> {
+    Optional<BranchEntity> findByIfscCode(String ifscCode);
 
 }

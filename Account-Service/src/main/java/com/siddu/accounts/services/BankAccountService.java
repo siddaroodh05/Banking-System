@@ -16,7 +16,10 @@ import com.siddu.accounts.repository.AccountProfileEntityRepository;
 import com.siddu.accounts.repository.BranchEntityRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -114,7 +117,7 @@ public class BankAccountService {
             AccountNumber = AccountNumberGenerator.generate();
         } while (accountEntityRepository.existsByAccountNumber(AccountNumber));
 
-        BranchEntity branch = branchEntityRepository.findById(request.getBranchId()).orElseThrow(
+        BranchEntity branch = branchEntityRepository.findByIfscCode(request.getIfscCode()).orElseThrow(
                 () -> new ResourceNotFoundException("branch not found")
         );
         if(!branch.getActive()){
@@ -191,6 +194,16 @@ public class BankAccountService {
                 account.getBalance(),
                 "balance check successful");
 
+    }
+    public Page<BranchResponse> getBranches( int page, int size) {
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by("createdAt").descending());
+        Page<BranchEntity> branchpage=branchEntityRepository.findAll(pageable);
+
+        return branchpage.map(branch -> new BranchResponse(
+                branch.getBranchName(),branch.getIfscCode(),branch.getActive(),
+                        branch.getAddressLine(),branch.getCity(),branch.getPincode()
+                ));
     }
 
 
