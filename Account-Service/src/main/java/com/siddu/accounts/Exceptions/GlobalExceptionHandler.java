@@ -72,6 +72,12 @@ public class GlobalExceptionHandler {
         return  ResponseEntity.status(HttpStatus.FORBIDDEN).
                 body(new ApiErrorResponse(HttpStatus.FORBIDDEN.name(),e.getMessage()));
     }
+    @ExceptionHandler(DuplicateResourceFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleDuplicateResourceFoundException(DuplicateResourceFoundException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).
+                body(new ApiErrorResponse(HttpStatus.CONFLICT.name(),e.getMessage()));
+    }
+
 
 
 }
