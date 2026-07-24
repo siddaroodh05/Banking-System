@@ -3,6 +3,7 @@ package com.siddu.accounts.services;
 import com.siddu.accounts.Dto.Requests.AddressUpdateRequest;
 import com.siddu.accounts.Dto.Responses.ApiResponse;
 import com.siddu.accounts.Dto.Responses.ProfileResponse;
+import com.siddu.accounts.Dto.Responses.SuccessResponse;
 import com.siddu.accounts.Entity.AccountProfileEntity;
 import com.siddu.accounts.Enums.KycStatus;
 import com.siddu.accounts.Exceptions.DuplicateResourceFoundException;
@@ -27,7 +28,7 @@ public class ProfilemanagementService {
                    new ResourceNotFoundException("user dont have account profile"));
 
            if(profile.getKycStatus().equals(KycStatus.PENDING)){
-               throw new KycMismatchException("An address update request is already pending approval.")
+               throw new KycMismatchException("An address update request is already pending approval.");
 
            }
 
@@ -52,10 +53,26 @@ public class ProfilemanagementService {
                    profile.getAddressLine(),
                    profile.getCity(),
                    profile.getState(),
-                   profile.getPincode(),
+                   profile.getPincode()
                    ,profile.getKycStatus()
            ),  "Address update request submitted successfully and is pending admin approval.");
 
+
+    }
+    public SuccessResponse updateProfilename(String name){
+       AccountProfileEntity profile= accountProfileEntityRepository.findByUserId(SecurityUtils.getCurrentUserId()).orElseThrow(()->
+                new DuplicateResourceFoundException("user dont have account profile"));
+       if(profile.getKycStatus().equals(KycStatus.PENDING)){
+           throw new KycMismatchException("An Accountholdername update request is already pending");
+       }
+       if(profile.getAccountHolderName().equals(name)){
+           throw new DuplicateResourceFoundException("new name must be different from current name");
+       }
+       profile.setAccountHolderName(name);
+       profile.setKycStatus(KycStatus.PENDING);
+       accountProfileEntityRepository.save(profile);
+       return new SuccessResponse("new account holder name "+ profile.getAccountHolderName()
+               + " updated successfully. and is pending admin approval.");
 
     }
 
